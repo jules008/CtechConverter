@@ -300,7 +300,14 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
         
         If InStr(1, AryString(i), "preferred network", vbTextCompare) Then AryString(i) = "skip"
         If InStr(1, AryString(i), "Continued", vbTextCompare) Then AryString(i) = "skip"
-        If InStr(1, AryString(i), "Total", vbTextCompare) Then AryString(i) = "skip"
+        
+        If InStr(1, AryString(i), "Total", vbTextCompare) Then
+            AryString(i) = "skip"
+            If InStr(1, AryString(i + 1), "Total", vbTextCompare) Then
+            Else
+                AryString(i + 1) = "skip"
+            End If
+        End If
         
         TmpAry = Split(AryString(i))
         
@@ -327,6 +334,16 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                 Case Is = 2
                     If IsNumeric(TmpAry(1)) Then
                         ItemDate = TmpAry(0) & " " & TmpAry(1) & " " & TmpAry(2)
+                    Else
+                        'purchases
+                        AryItemList(RowNo, enIndex) = i
+                        AryItemList(RowNo, enTime) = TmpAry(0)
+                        AryItemList(RowNo, enCategory) = Category
+                        AryItemList(RowNo, enDescription) = TmpAry(1)
+                        AryItemList(RowNo, enCost) = TmpAry(2)
+                        AryItemList(RowNo, enPhoneNo) = PhoneNum
+                        AryItemList(RowNo, enItemDate) = ItemDate
+                        RowNo = RowNo + 1
                     End If
                 
                  Case Is = 3
@@ -568,13 +585,25 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                     End If
                 Case Is = 8
                     If TmpAry(0) <> "time" And TmpAry(0) <> "Total" Then
-                        AryItemList(RowNo, enIndex) = i
-                        AryItemList(RowNo, enTime) = TmpAry(0)
-                        AryItemList(RowNo, enCategory) = Category
-                        AryItemList(RowNo, enDescription) = TmpAry(2) & " " & TmpAry(3)
-                        AryItemList(RowNo, enDuration) = TmpAry(4) & " " & TmpAry(5)
-                        AryItemList(RowNo, enCost) = TmpAry(6)
-                        RowNo = RowNo + 1
+                        If Category = "UK Calls" Then
+                            AryItemList(RowNo, enIndex) = i
+                            AryItemList(RowNo, enTime) = TmpAry(0)
+                            AryItemList(RowNo, enCategory) = Category
+                            AryItemList(RowNo, enPhoneNo) = PhoneNum
+                            AryItemList(RowNo, enDescription) = TmpAry(2) & " " & TmpAry(3) & " " & TmpAry(4)
+                            AryItemList(RowNo, enItemDate) = ItemDate
+                            AryItemList(RowNo, enDuration) = TmpAry(5) & " " & TmpAry(6)
+                            AryItemList(RowNo, enCost) = TmpAry(8)
+                            RowNo = RowNo + 1
+                        Else
+                            AryItemList(RowNo, enIndex) = i
+                            AryItemList(RowNo, enTime) = TmpAry(0)
+                            AryItemList(RowNo, enCategory) = Category
+                            AryItemList(RowNo, enDescription) = TmpAry(2) & " " & TmpAry(3)
+                            AryItemList(RowNo, enDuration) = TmpAry(4) & " " & TmpAry(5)
+                            AryItemList(RowNo, enCost) = TmpAry(6)
+                            RowNo = RowNo + 1
+                        End If
                     End If
                 Case Is = 9
                     If TmpAry(0) <> "time" And TmpAry(0) <> "Total" Then

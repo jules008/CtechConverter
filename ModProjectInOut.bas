@@ -320,4 +320,21 @@ Public Sub ImportModule(ModuleName As String)
     ThisWorkbook.VBProject.VBComponents.Import IMPORT_FILE_PATH & ModuleName
 End Sub
 
-
+' ===============================================================
+' ListRefs
+' Lists refs
+' ---------------------------------------------------------------
+Public Sub ListRefs()
+    Dim Reference As Object
+    Dim i As Integer
+    For Each Reference In ThisWorkbook.VBProject.References
+        With Reference
+'            ShtMain.Range("L1").Offset(i, 0) = .Name
+            ShtMain.Range("L2").Offset(i, 0) = .Description
+            ShtMain.Range("L3").Offset(i, 0) = .Minor
+            ShtMain.Range("L4").Offset(i, 0) = .Major
+'            ShtMain.Range("L5").Offset(i, 0) = .GUID
+            i = i + 4
+        End With
+    Next
+End Sub
