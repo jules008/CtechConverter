@@ -17,7 +17,7 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 21 Jun 20
+' Date - 02 Jul 20
 '===============================================================
 Option Explicit
 
@@ -60,6 +60,8 @@ Public Sub AddHeadings()
     Range("E1") = "Date"
     Range("F1") = "Description"
     Range("G1") = "Duration"
-    Range("H1") = "Cost"
+    Range("H1") = "MB"
+    Range("I1") = "Text"
+    Range("J1") = "Cost"
 End Sub
 

@@ -9,7 +9,7 @@ Attribute VB_Name = "ModMain"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jun 20
+' Date - 02 Jul 20
 '===============================================================
 Option Explicit
 Private AcroApp As Acrobat.AcroApp
@@ -68,6 +68,7 @@ Public Sub MainConvert(PDFPath As String)
                         Set PDFPage = AcroPDDoc.AcquirePage(PageNum)
 
                         AryPhoneList = GetNumbers(PageNum, AcroPDDoc)
+                        
                         ShtPhoneList.LogResult AryPhoneList
                         StrText = ""
                     End If
@@ -146,7 +147,7 @@ Public Function GetNumbers(ByVal PageNum As Integer, AcroPDDoc As Acrobat.AcroPD
     
     AryString = Split(StrText, vbCrLf)
     
-    ReDim AryOutput(0 To UBound(AryString) / 2, 0 To 5)
+    ReDim AryOutput(0 To UBound(AryString) / 2, 0 To 8)
     
     RowNo = 0
     For i = LBound(AryString) To UBound(AryString)
@@ -177,7 +178,7 @@ Public Function GetNumbers(ByVal PageNum As Integer, AcroPDDoc As Acrobat.AcroPD
         End If
     Next
     
-    ReDim AryPhoneNos(0 To RowNo - 1, 0 To 5)
+    ReDim AryPhoneNos(0 To RowNo - 1, 0 To 8)
     
     For x = LBound(AryPhoneNos, 1) To UBound(AryPhoneNos, 1)
          For y = LBound(AryPhoneNos, 2) To UBound(AryPhoneNos, 2)
@@ -221,6 +222,8 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
     Dim NormCostCl As Boolean
     Dim Col As Integer
     Dim StrCont As String
+    Dim Duration As String
+    Dim ConvRet As Variant
     
     On Error Resume Next
     
@@ -617,6 +620,21 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                     End If
             End Select
         End If
+        Duration = AryItemList(RowNo - 1, enDuration)
+        
+        If ConvertTime(Duration) <> "" Then AryItemList(RowNo - 1, enDuration) = ConvertTime(Duration)
+        
+        ConvRet = GetData(Duration)
+        If ConvRet <> "" And ConvRet <> 0 Then
+            AryItemList(RowNo - 1, enMB) = GetData(Duration)
+            AryItemList(RowNo - 1, enDuration) = ""
+        End If
+        
+        ConvRet = GetText(Duration)
+        If ConvRet <> "" And ConvRet <> 0 Then
+            AryItemList(RowNo - 1, enText) = GetText(Duration)
+            AryItemList(RowNo - 1, enDuration) = ""
+        End If
     Next
     
     ItemisationExt = AryItemList
@@ -766,3 +784,46 @@ Function HasNumber(strData As String) As Boolean
  Next i
  
 End Function
+
+' ===============================================================
+' ConvertTime
+' Converts minutes and seconds to system time
+' ---------------------------------------------------------------
+Public Function ConvertTime(ByRef TimeIn As String) As Date
+    Dim TmpAry() As String
+    Dim TimeOut As Date
+    
+    TmpAry = Split(TimeIn, " ")
+
+    If Right(TmpAry(0), 1) = "m" And Right(TmpAry(1), 1) = "s" Then
+        TimeOut = TimeSerial(0, GetNumeric(TmpAry(0), False), GetNumeric(TmpAry(1), False))
+    End If
+    
+    If IsTime(TimeOut) Then ConvertTime = TimeOut
+End Function
+
+' ===============================================================
+' GetData
+' Gets data from duration column
+' ---------------------------------------------------------------
+Public Function GetData(Duration As String) As Single
+        
+    If InStr(1, Duration, "MB", vbTextCompare) Then
+        GetData = GetNumeric(Duration, True)
+    ElseIf InStr(1, Duration, "KB", vbTextCompare) Then
+        GetData = GetNumeric(Duration, True) / 1000
+    End If
+End Function
+
+
+' ===============================================================
+' GetText
+' Gets text from duration column
+' ---------------------------------------------------------------
+Public Function GetText(Duration As String) As Single
+        
+    If InStr(1, Duration, "text", vbTextCompare) Then
+        GetText = GetNumeric(Duration, False)
+    End If
+End Function
+

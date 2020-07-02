@@ -16,7 +16,7 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jun 20
+' Date - 02 Jul 20
 '===============================================================
 Option Explicit
 
@@ -28,18 +28,20 @@ Public Sub SelectFile()
     Dim Fldr As FileDialog
     Dim FilePath As String
     
-    Set Fldr = Application.FileDialog(msoFileDialogFilePicker)
-    With Fldr
-        .Title = "Select a File"
-        .Filters.Clear
-        .Filters.Add "PDF Files", "*.PDF, 1"
-        .AllowMultiSelect = False
-        .ButtonName = "Select"
-        .InitialFileName = Application.DefaultFilePath
-        
-        If .Show <> -1 Then Exit Sub
-        FilePath = .SelectedItems(1)
-    End With
+'    Set Fldr = Application.FileDialog(msoFileDialogFilePicker)
+'    With Fldr
+'        .Title = "Select a File"
+'        .Filters.Clear
+'        .Filters.Add "PDF Files", "*.PDF, 1"
+'        .AllowMultiSelect = False
+'        .ButtonName = "Select"
+'        .InitialFileName = Application.DefaultFilePath
+'
+'        If .Show <> -1 Then Exit Sub
+'        FilePath = .SelectedItems(1)
+'    End With
+    
+    FilePath = "C:\Users\Julian\OneDrive\Documents\OneSheet\Customers\CTech Group\Vodafone PDFs\Vodafone_Example_bill.pdf"
     
     If FilePath <> "" Then FrmProgress.ShowForm FilePath
 End Sub

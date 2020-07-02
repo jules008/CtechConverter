@@ -17,7 +17,7 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 21 Jun 20
+' Date - 02 Jul 20
 '===============================================================
 Option Explicit
 
@@ -28,10 +28,19 @@ Option Explicit
 Public Sub LogResult(AryExtract() As Variant)
     Dim NoRows As Integer
     Dim RngResults As Range
+    Dim i As Integer
     
     NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
-    Set RngResults = Me.Range(Me.Cells(1, 1), Me.Cells(UBound(AryExtract, 1) + 1, UBound(AryExtract, 2) + 1)).Offset(NoRows, 0)
-    RngResults = AryExtract
+    Set RngResults = Range("A1").Offset(NoRows, 0)
+    
+    For i = LBound(AryExtract, 1) To UBound(AryExtract, 1)
+        RngResults.Offset(i, enMobNum) = AryExtract(i, enMobNum)
+        RngResults.Offset(i, enName) = AryExtract(i, enName)
+        RngResults.Offset(i, enPlan) = AryExtract(i, enPlan)
+        RngResults.Offset(i, enServCh) = AryExtract(i, enServCh)
+        RngResults.Offset(i, enUsage) = AryExtract(i, enUsage)
+        RngResults.Offset(i, enTotal) = AryExtract(i, enTotal)
+    Next
     
     RngResults.Columns.AutoFit
     
@@ -54,10 +63,13 @@ End Sub
 Public Sub AddHeadings()
     Range("A1") = "Phone Number"
     Range("B1") = "User Name"
-    Range("C1") = "Service Charge"
-    Range("D1") = "Plan"
+    Range("C1") = "Plan"
+    Range("D1") = "Service Charge"
     Range("E1") = "Usage"
-    Range("F1") = "Total"
+    Range("F1") = "Mins"
+    Range("G1") = "No SMS"
+    Range("H1") = "Data(MB)"
+    Range("I1") = "Total Cost"
 End Sub
 
 

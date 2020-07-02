@@ -9,7 +9,7 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Jun 20
+' Date - 02 Jul 20
 '===============================================================
 Option Explicit
 
@@ -46,9 +46,12 @@ Global Classes
 Enum enNumCols
     enMobNum = 0
     enName
-    enServCh
     enPlan
+    enServCh
     enUsage
+    enMins
+    enSMS
+    enData
     enTotal
 End Enum
 
@@ -60,5 +63,7 @@ Enum enItemList
     enItemDate
     enDescription
     enDuration
+    enMB
+    enText
     enCost
 End Enum
