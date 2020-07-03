@@ -9,7 +9,7 @@ Attribute VB_Name = "ModMain"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 02 Jul 20
+' Date - 03 Jul 20
 '===============================================================
 Option Explicit
 Private AcroApp As Acrobat.AcroApp
@@ -45,7 +45,7 @@ Public Sub MainConvert(PDFPath As String)
     
         Set AcroPDDoc = AcroAVDoc.GetPDDoc()
         
-        For PageNum = 0 To AcroPDDoc.GetNumPages() - 1
+        For PageNum = [PageNo] To AcroPDDoc.GetNumPages() - 1
             Set PDFPage = AcroPDDoc.AcquirePage(PageNum)
             Set PDFHighlight = New AcroHiliteList
         
@@ -224,6 +224,7 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
     Dim StrCont As String
     Dim Duration As String
     Dim ConvRet As Variant
+    Dim DateMerged As String
     
     On Error Resume Next
     
@@ -306,13 +307,26 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
         
         If InStr(1, AryString(i), "Total", vbTextCompare) Then
             AryString(i) = "skip"
-            If InStr(1, AryString(i + 1), "Total", vbTextCompare) Then
-            Else
-                AryString(i + 1) = "skip"
+            If i <> UBound(AryString) Then
+                If InStr(1, AryString(i + 1), "Total", vbTextCompare) Then
+                    AryString(i + 1) = "skip"
+                End If
             End If
         End If
         
         TmpAry = Split(AryString(i))
+
+If [PhoneNo] = PhoneNum And [Index] = i Then Stop
+
+        If DateMerged <> "" Then
+            ItemDate = DateMerged
+            DateMerged = ""
+        End If
+        
+        If MergedDate(TmpAry) <> "No Date" Then
+            DateMerged = MergedDate(TmpAry)
+            ReDim Preserve TmpAry(0 To UBound(TmpAry) - 3)
+        End If
         
         If UBound(TmpAry) > 6 Then
             If TmpAry(0) = "time" Then
@@ -400,7 +414,9 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                     
                 Case Is = 6
                     If TmpAry(0) <> "time" And TmpAry(0) <> "Total" Then
-                        If Category = "UK Calls" Then
+                        If Category = "UK Calls" Or _
+                        Category = "Overseas Messaging, mobile internet" Or _
+                        Category = "Overseas Calls" Then
                             'uk calls
                             AryItemList(RowNo, enIndex) = i
                             AryItemList(RowNo, enTime) = TmpAry(0)
@@ -506,7 +522,17 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                         RowNo = RowNo + 1
                     End If
                 Case Is = 4
-                    If Category = "Overseas Mobile Internet" Or Category = "UK Messaging, mobile internet" Then
+                    If Category = "UK Messaging, mobile internet" Then
+                        AryItemList(RowNo, enIndex) = i
+                        AryItemList(RowNo, enTime) = TmpAry(0)
+                        AryItemList(RowNo, enCategory) = Category
+                        AryItemList(RowNo, enPhoneNo) = PhoneNum
+                        AryItemList(RowNo, enItemDate) = ItemDate
+                        AryItemList(RowNo, enDescription) = TmpAry(1)
+                        AryItemList(RowNo, enDuration) = TmpAry(2) & TmpAry(3)
+                        AryItemList(RowNo, enCost) = TmpAry(4)
+                        RowNo = RowNo + 1
+                    ElseIf Category = "Overseas Mobile Internet" Then
                         AryItemList(RowNo, enIndex) = i
                         AryItemList(RowNo, enTime) = TmpAry(0)
                         AryItemList(RowNo, enCategory) = Category
@@ -538,6 +564,18 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                         AryItemList(RowNo, enDuration) = TmpAry(4)
                         AryItemList(RowNo, enCost) = TmpAry(5)
                         RowNo = RowNo + 1
+                    ElseIf Category = "UK Calls" And _
+                    Right(TmpAry(2), 1) = "h" And _
+                    Len(TmpAry(2)) < 3 Then
+                        AryItemList(RowNo, enIndex) = i
+                        AryItemList(RowNo, enTime) = TmpAry(0)
+                        AryItemList(RowNo, enCategory) = Category
+                        AryItemList(RowNo, enPhoneNo) = PhoneNum
+                        AryItemList(RowNo, enItemDate) = ItemDate
+                        AryItemList(RowNo, enDescription) = TmpAry(1)
+                        AryItemList(RowNo, enDuration) = TmpAry(2) & " " & TmpAry(3) & " " & TmpAry(4)
+                        AryItemList(RowNo, enCost) = TmpAry(5)
+                        RowNo = RowNo + 1
                     Else
                         AryItemList(RowNo, enIndex) = i
                         AryItemList(RowNo, enTime) = TmpAry(0)
@@ -551,15 +589,27 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                     End If
                 Case Is = 6
                     If TmpAry(0) <> "time" And TmpAry(0) <> "Total" Then
-                        AryItemList(RowNo, enIndex) = i
-                        AryItemList(RowNo, enTime) = TmpAry(0)
-                        AryItemList(RowNo, enCategory) = Category
-                        AryItemList(RowNo, enPhoneNo) = PhoneNum
-                        AryItemList(RowNo, enItemDate) = ItemDate
-                        AryItemList(RowNo, enDescription) = TmpAry(2) & " " & TmpAry(3)
-                        AryItemList(RowNo, enDuration) = TmpAry(4) & " " & TmpAry(5)
-                        AryItemList(RowNo, enCost) = TmpAry(6)
-                        RowNo = RowNo + 1
+                        If Category = "UK Calls" And Right(TmpAry(3), 1) = "h" Then
+                            AryItemList(RowNo, enIndex) = i
+                            AryItemList(RowNo, enTime) = TmpAry(0)
+                            AryItemList(RowNo, enCategory) = Category
+                            AryItemList(RowNo, enPhoneNo) = PhoneNum
+                            AryItemList(RowNo, enItemDate) = ItemDate
+                            AryItemList(RowNo, enDescription) = TmpAry(2)
+                            AryItemList(RowNo, enDuration) = TmpAry(3) & TmpAry(4) & " " & TmpAry(5)
+                            AryItemList(RowNo, enCost) = TmpAry(6)
+                            RowNo = RowNo + 1
+                        Else
+                            AryItemList(RowNo, enIndex) = i
+                            AryItemList(RowNo, enTime) = TmpAry(0)
+                            AryItemList(RowNo, enCategory) = Category
+                            AryItemList(RowNo, enPhoneNo) = PhoneNum
+                            AryItemList(RowNo, enItemDate) = ItemDate
+                            AryItemList(RowNo, enDescription) = TmpAry(2) & " " & TmpAry(3)
+                            AryItemList(RowNo, enDuration) = TmpAry(4) & " " & TmpAry(5)
+                            AryItemList(RowNo, enCost) = TmpAry(6)
+                            RowNo = RowNo + 1
+                        End If
                     End If
                     
                 Case Is = 7
@@ -620,20 +670,24 @@ Public Function ItemisationExt(ByVal PageNum As Integer, AcroPDDoc As Acrobat.Ac
                     End If
             End Select
         End If
-        Duration = AryItemList(RowNo - 1, enDuration)
         
-        If ConvertTime(Duration) <> "" Then AryItemList(RowNo - 1, enDuration) = ConvertTime(Duration)
+        If RowNo > 0 Then
+            Duration = AryItemList(RowNo - 1, enDuration)
         
-        ConvRet = GetData(Duration)
-        If ConvRet <> "" And ConvRet <> 0 Then
-            AryItemList(RowNo - 1, enMB) = GetData(Duration)
-            AryItemList(RowNo - 1, enDuration) = ""
-        End If
-        
-        ConvRet = GetText(Duration)
-        If ConvRet <> "" And ConvRet <> 0 Then
-            AryItemList(RowNo - 1, enText) = GetText(Duration)
-            AryItemList(RowNo - 1, enDuration) = ""
+            ConvRet = ConvertTime(Duration)
+            If ConvRet <> "" Then AryItemList(RowNo - 1, enDuration) = ConvertTime(Duration)
+            
+            ConvRet = GetData(Duration)
+            If ConvRet <> "" And ConvRet <> 0 Then
+                AryItemList(RowNo - 1, enMB) = GetData(Duration)
+                AryItemList(RowNo - 1, enDuration) = ""
+            End If
+            
+            ConvRet = GetText(Duration)
+            If ConvRet <> "" And ConvRet <> 0 Then
+                AryItemList(RowNo - 1, enText) = GetText(Duration)
+                AryItemList(RowNo - 1, enDuration) = ""
+            End If
         End If
     Next
     
@@ -795,9 +849,17 @@ Public Function ConvertTime(ByRef TimeIn As String) As Date
     
     TmpAry = Split(TimeIn, " ")
 
-    If Right(TmpAry(0), 1) = "m" And Right(TmpAry(1), 1) = "s" Then
-        TimeOut = TimeSerial(0, GetNumeric(TmpAry(0), False), GetNumeric(TmpAry(1), False))
-    End If
+    Select Case UBound(TmpAry)
+        Case Is = 1
+            If Right(TmpAry(0), 1) = "m" And Right(TmpAry(1), 1) = "s" Then
+                TimeOut = TimeSerial(0, GetNumeric(TmpAry(0), False), GetNumeric(TmpAry(1), False))
+            End If
+        Case Is = 2
+            If Right(TmpAry(0), 1) = "h" And Right(TmpAry(1), 1) = "m" And Right(TmpAry(2), 1) = "s" Then
+                TimeOut = TimeSerial(GetNumeric(TmpAry(0), False), GetNumeric(TmpAry(1), False), GetNumeric(TmpAry(2), False))
+            End If
+        
+    End Select
     
     If IsTime(TimeOut) Then ConvertTime = TimeOut
 End Function
@@ -806,7 +868,7 @@ End Function
 ' GetData
 ' Gets data from duration column
 ' ---------------------------------------------------------------
-Public Function GetData(Duration As String) As Single
+Public Function GetData(Duration As String) As String
         
     If InStr(1, Duration, "MB", vbTextCompare) Then
         GetData = GetNumeric(Duration, True)
@@ -820,10 +882,36 @@ End Function
 ' GetText
 ' Gets text from duration column
 ' ---------------------------------------------------------------
-Public Function GetText(Duration As String) As Single
+Public Function GetText(Duration As String) As String
         
     If InStr(1, Duration, "text", vbTextCompare) Then
         GetText = GetNumeric(Duration, False)
     End If
 End Function
 
+' ===============================================================
+' MergedDate
+' checks for dates merged in lines that are missing CRs.  if it finds
+' a date at the end of the line, it returns the date, if not it returns
+' "NoDate"
+' ---------------------------------------------------------------
+Public Function MergedDate(ByRef AryInput() As String) As String
+    Dim InMonth As String
+    Dim InDate As String
+    Dim inDay As String
+    Dim i As Integer
+    
+    i = UBound(AryInput)
+    
+    If i > 2 Then
+        InMonth = AryInput(i)
+        InDate = AryInput(i - 1)
+        inDay = AryInput(i - 2)
+    End If
+    
+    If IsDate(InDate & " " & InMonth) Then
+        MergedDate = inDay & " " & InDate & " " & InMonth
+    Else
+        MergedDate = "No Date"
+    End If
+End Function

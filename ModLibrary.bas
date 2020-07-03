@@ -5,7 +5,7 @@ Attribute VB_Name = "ModLibrary"
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added ColourConvert
 '---------------------------------------------------------------
-' Date - 20 May 20
+' Date - 03 Jul 20
 '===============================================================
 
 Option Explicit
@@ -287,7 +287,7 @@ Public Function PrintDoc(FileName As String)
     
     On Error Resume Next
     
-    x = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
+'    x = ShellExecute(0, "Print", FileName, 0&, 0&, 3)
 
 End Function
 
@@ -300,7 +300,7 @@ Public Function OpenDoc(FileName As String)
     
 '    On Error Resume Next
     
-    x = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
+'    x = ShellExecute(0, "Open", FileName, "", "", vbNormalNoFocus)
 
 End Function
 
@@ -386,24 +386,24 @@ End Function
 ' GetNumeric
 ' Separate number from string
 ' ---------------------------------------------------------------
-Public Function GetNumeric(VarText As Variant, Financial As Boolean)
-Dim StringLength As Integer
-Dim i As Integer
-Dim Chr As String
-Dim Result As String
-
-StringLength = Len(VarText)
-
-For i = 1 To StringLength
-    Chr = Mid(VarText, i, 1)
-    If Financial Then
-        If IsNumeric(Chr) Or Chr = "." Or Chr = "£" Then Result = Result & Chr
-    Else
-        If IsNumeric(Chr) Then Result = Result & Chr
-    End If
-Next i
-
-GetNumeric = Result
+Public Function GetNumeric(VarText As Variant, Financial As Boolean) As String
+    Dim StringLength As Integer
+    Dim i As Integer
+    Dim Chr As String
+    Dim Result As String
+    
+    StringLength = Len(VarText)
+    
+    For i = 1 To StringLength
+        Chr = Mid(VarText, i, 1)
+        If Financial Then
+            If IsNumeric(Chr) Or Chr = "." Or Chr = "£" Then Result = Result & Chr
+        Else
+            If IsNumeric(Chr) Then Result = Result & Chr
+        End If
+    Next i
+    
+    GetNumeric = Result
 
 End Function
 

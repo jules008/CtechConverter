@@ -17,7 +17,7 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 02 Jul 20
+' Date - 03 Jul 20
 '===============================================================
 Option Explicit
 
@@ -37,9 +37,9 @@ Public Sub LogResult(AryExtract() As Variant)
         RngResults.Offset(i, enMobNum) = AryExtract(i, enMobNum)
         RngResults.Offset(i, enName) = AryExtract(i, enName)
         RngResults.Offset(i, enPlan) = AryExtract(i, enPlan)
-        RngResults.Offset(i, enServCh) = AryExtract(i, enServCh)
-        RngResults.Offset(i, enUsage) = AryExtract(i, enUsage)
-        RngResults.Offset(i, enTotal) = AryExtract(i, enTotal)
+        RngResults.Offset(i, enServCh) = CSng(AryExtract(i, enServCh))
+        RngResults.Offset(i, enUsage) = CSng(AryExtract(i, enUsage))
+        RngResults.Offset(i, enTotal) = CSng(AryExtract(i, enTotal))
     Next
     
     RngResults.Columns.AutoFit
@@ -52,7 +52,7 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
-    Me.UsedRange.ClearContents
+    Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
 End Sub
 
