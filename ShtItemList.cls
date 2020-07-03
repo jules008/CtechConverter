@@ -44,7 +44,7 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
-    Me.UsedRange.ClearContents
+    Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
 End Sub
 
