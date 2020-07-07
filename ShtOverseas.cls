@@ -2,14 +2,14 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ShtItemList"
+Attribute VB_Name = "ShtOverseas"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================
-' Module ShtItemList
-' Logs extracted data from bill
+' Module ShtOverseas
+' Filtered list of just overseas calls
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -17,28 +17,40 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 02 Jul 20
+' Date - 07 Jul 20
 '===============================================================
 Option Explicit
 
+Private Const RNG_INDEX As String = "A2"
 Private Const NO_COLS As Integer = 12
 
 ' ===============================================================
-' LogResult
-' Logs the results of the comparison
+' FilterList
+' Filters Extract list of overseas calls
 ' ---------------------------------------------------------------
-Public Sub LogResult(AryExtract() As Variant)
-    Dim NoRows As Integer
-    Dim RngResults As Range
+Public Sub FilterList(AryItemList() As Variant)
+    Dim i, x As Integer
+    Dim AryOutput() As String
+    Dim RowNo As Integer
+    
+    ReDim AryOutput(1 To UBound(AryItemList), 1 To NO_COLS)
+    
+    RowNo = 1
+    For i = LBound(AryItemList, 1) To UBound(AryItemList, 1)
         
+        If AryItemList(i, enfrom) = "Overseas" Then
+            For x = LBound(AryItemList, 2) To UBound(AryItemList, 2)
+                AryOutput(RowNo, x) = AryItemList(i, x)
+            Next
+            RowNo = RowNo + 1
+        End If
+    Next
     
-    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
-    Set RngResults = Me.Range(Me.Cells(1, 1), Me.Cells(UBound(AryExtract, 1) + 1, UBound(AryExtract, 2) + 1)).Offset(NoRows, 0)
-    RngResults = AryExtract
+    ReDim Preserve AryOutput(1 To RowNo - 1, 1 To NO_COLS)
+    ClearData
+    AddHeadings
     
-    RngResults.EntireColumn.AutoFit
-    
-    Set RngResults = Nothing
+    Range(Cells(2, 1), Cells(RowNo, NO_COLS)) = AryOutput()
 End Sub
 
 ' ===============================================================
@@ -69,19 +81,3 @@ Public Sub AddHeadings()
     Range("L1") = "To"
 End Sub
 
-' ===============================================================
-' SendItemList
-' Sends item list to overseas tab for filter
-' ---------------------------------------------------------------
-Public Sub SendItemList()
-    Dim NoRows As Integer
-    Dim AryList() As Variant
-    
-    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
-    
-    ReDim AryList(0 To NoRows - 2, 0 To NO_COLS - 1)
-    
-    AryList = Range(Cells(1, 1), Cells(NoRows, NO_COLS))
-    
-    ShtOverseas.FilterList AryList
-End Sub

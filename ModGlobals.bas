@@ -56,7 +56,7 @@ Enum enNumCols
 End Enum
 
 Enum enItemList
-    enIndex
+    enIndex = 1
     enTime
     enPhoneNo
     enCategory
@@ -66,4 +66,6 @@ Enum enItemList
     enMB
     enText
     enCost
+    enfrom
+    enTo
 End Enum
