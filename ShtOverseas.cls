@@ -21,7 +21,7 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Private Const RNG_INDEX As String = "A2"
+Private Const RNG_INDEX As String = "A1"
 Private Const NO_COLS As Integer = 12
 
 ' ===============================================================
@@ -30,7 +30,7 @@ Private Const NO_COLS As Integer = 12
 ' ---------------------------------------------------------------
 Public Sub FilterList(AryItemList() As Variant)
     Dim i, x As Integer
-    Dim AryOutput() As String
+    Dim AryOutput() As Variant
     Dim RowNo As Integer
     
     ReDim AryOutput(1 To UBound(AryItemList), 1 To NO_COLS)
@@ -46,11 +46,10 @@ Public Sub FilterList(AryItemList() As Variant)
         End If
     Next
     
-    ReDim Preserve AryOutput(1 To RowNo - 1, 1 To NO_COLS)
+'    ReDim Preserve AryOutput(1 To RowNo - 1, 1 To NO_COLS)
     ClearData
     AddHeadings
-    
-    Range(Cells(2, 1), Cells(RowNo, NO_COLS)) = AryOutput()
+    DisplayList AryOutput
 End Sub
 
 ' ===============================================================
@@ -81,3 +80,30 @@ Public Sub AddHeadings()
     Range("L1") = "To"
 End Sub
 
+' ===============================================================
+' DisplayList
+' Displays list of overseas calls
+' ---------------------------------------------------------------
+Private Sub DisplayList(AryList() As Variant)
+    Dim r As Integer
+    
+    On Error Resume Next
+    
+    For r = LBound(AryList, 1) To UBound(AryList, 1)
+        With Range(RNG_INDEX)
+            .Offset(r, 0) = AryList(r, enIndex)
+            .Offset(r, 1) = CSng(AryList(r, enTime))
+            .Offset(r, 2) = AryList(r, enPhoneNo)
+            .Offset(r, 3) = AryList(r, enCategory)
+            .Offset(r, 4) = AryList(r, enItemDate)
+            .Offset(r, 5) = AryList(r, enDescription)
+            .Offset(r, 6) = CSng(AryList(r, enDuration))
+            .Offset(r, 7) = CSng(AryList(r, enMB))
+            .Offset(r, 8) = CSng(AryList(r, enText))
+            .Offset(r, 9) = CSng(AryList(r, enCost))
+            .Offset(r, 10) = AryList(r, enfrom)
+            .Offset(r, 11) = AryList(r, enTo)
+        End With
+    Next
+    
+End Sub

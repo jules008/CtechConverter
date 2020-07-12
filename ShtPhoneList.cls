@@ -21,6 +21,10 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
+Const LIST_AREA As String = "A1:I"
+Const LIST_IND As String = "A1"
+Const EXP_FILENAME As String = "IndSumRep.pdf"
+
 ' ===============================================================
 ' LogResult
 ' Logs the results of the comparison
@@ -42,6 +46,13 @@ Public Sub LogResult(AryExtract() As Variant)
         RngResults.Offset(i, enTotal) = CSng(AryExtract(i, enTotal))
     Next
     
+    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
+    
+    RngResults.Offset(NoRows + 1, enplan) = "Total"
+    RngResults.Offset(NoRows + 1, enServCh) = Application.WorksheetFunction.Sum(Me.Columns(enServCh))
+    RngResults.Offset(NoRows + 1, enUsage) = Application.WorksheetFunction.Sum(Me.Columns(enUsage))
+    RngResults.Offset(NoRows + 1, enTotal) = Application.WorksheetFunction.Sum(Me.Columns(enTotal))
+    
     RngResults.Columns.AutoFit
     
     Set RngResults = Nothing
@@ -52,8 +63,10 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -72,6 +85,52 @@ Public Sub AddHeadings()
     Range("I1") = "Total Cost"
 End Sub
 
+' ===============================================================
+' SendToPDF
+' Sends list to PDF file
+' ---------------------------------------------------------------
+Public Sub SendToPDF()
+    Dim NoRows As Integer
+    Dim RngList As Range
+    Dim i As Integer
+    
+    For i = 1 To 500
+        If Me.Range(LIST_IND).Offset(i, 0).Value = "" Then
+            NoRows = i
+            Exit For
+        End If
+    Next
+    
+    Set RngList = Me.Range(LIST_AREA & NoRows)
+    
+    RngList.ExportAsFixedFormat xlTypePDF, ThisWorkbook.Path & "\" & EXP_FILENAME, xlQualityStandard, True, True, OpenAfterPublish:=False
+    
+    Set RngList = Nothing
+End Sub
 
+' ===============================================================
+' DeletePDF
+' Deletes the PDF file when it is no longer needed
+' ---------------------------------------------------------------
+Public Sub DeletePDF()
+    Dim FSO As FileSystemObject
+    
+    Set FSO = New FileSystemObject
+    
+    With FSO
+        If .FileExists(ThisWorkbook.Path & "\" & EXP_FILENAME) Then
+            .DeleteFile ThisWorkbook.Path & "\" & EXP_FILENAME
+        End If
+    End With
+    
+    Set FSO = Nothing
+End Sub
 
+' ===============================================================
+' BtnHomeClick
+' Returns to Main screen
+' ---------------------------------------------------------------
+Public Sub BtnHomeClick()
+    ModBtnActions.GoToHome Me.Shapes("BtnHome")
+End Sub
 

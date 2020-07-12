@@ -39,6 +39,17 @@ Public MULTI_TAB As Boolean
 Global Classes
 '---------------------------------------------------------------
 
+' ===============================================================
+' Colours
+' ---------------------------------------------------------------
+Public Const COLOUR_1 As Long = &HFEF9F4
+Public Const COLOUR_2 As Long = &HEB8C1F
+Public Const COLOUR_3 As Long = &H6E563B
+Public Const COLOUR_4 As Long = 7170677
+Public Const COLOUR_5 As Long = 16548170
+Public Const COLOUR_6 As Long = 9868187
+Public Const COLOUR_7 As Long = &HFFFFFF
+Public Const COLOUR_8 As Long = 8486538
 
 '===============================================================
 ' Enumerators

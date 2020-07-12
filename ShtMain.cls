@@ -46,3 +46,44 @@ Public Sub SelectFile()
     If FilePath <> "" Then FrmProgress.ShowForm FilePath
 End Sub
 
+' ===============================================================
+' BtnIndSumRepClick
+' ---------------------------------------------------------------
+Public Sub BtnIndSumRepClick()
+    ActionButtonClick Me.Shapes("BtnIndSumRep")
+    ShtPhoneList.Activate
+End Sub
+
+
+' ===============================================================
+' BtnOutSpendRepClick
+' ---------------------------------------------------------------
+Public Sub BtnOutSpendRepClick()
+    ActionButtonClick Me.Shapes("BtnOutSpendRep")
+    ShtOutSpendRep.Activate
+End Sub
+
+' ===============================================================
+' BtnRoamRepClick
+' ---------------------------------------------------------------
+Public Sub BtnRoamRepClick()
+    ActionButtonClick Me.Shapes("BtnRoamRep")
+    ShtRoamRep.Activate
+End Sub
+
+' ===============================================================
+' BtnCountryRepClick
+' ---------------------------------------------------------------
+Public Sub BtnCountryRepClick()
+    ActionButtonClick Me.Shapes("BtnCountryRep")
+    ShtCountryRep.Activate
+End Sub
+
+' ===============================================================
+' BtnPDFRepClick
+' ---------------------------------------------------------------
+Public Sub BtnPDFRepClick()
+    ActionButtonClick Me.Shapes("BtnPDFRep")
+    ModPDFReport.CreateReport
+End Sub
+

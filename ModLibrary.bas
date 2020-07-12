@@ -406,4 +406,24 @@ Public Function GetNumeric(VarText As Variant, Financial As Boolean) As String
     GetNumeric = Result
 
 End Function
+' Force explicit declaration of variables
+Option Explicit
 
+' ===============================================================
+' HexadecimalToDecimal
+' Convert hex to decimal
+' ---------------------------------------------------------------
+Public Function HexadecimalToDecimal(HexValue As String) As Double
+
+    ' If hex starts with 0x, replace it with &H to represent Hex that VBA will understand
+    Dim ModifiedHexValue As String
+    
+    If Left(HexValue, 2) = "0x" Then
+        ModifiedHexValue = Replace(HexValue, "0x", "&H")
+    Else
+        ModifiedHexValue = "&h" & HexValue
+    End If
+    
+    HexadecimalToDecimal = CDec(ModifiedHexValue)
+
+End Function

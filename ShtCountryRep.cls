@@ -2,14 +2,14 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "ShtRoamRep"
+Attribute VB_Name = "ShtCountryRep"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================
-' Module ShtRoamRep
-' Dtailed report on roaming usage
+' Module ShtCountryRep
+' Country report
 '---------------------------------------------------------------
 ' Created by Julian Turner
 ' OneSheet Consulting
@@ -17,13 +17,55 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 10 Jul 20
+' Date - 09 Jul 20
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "D1:J"
-Const LIST_IND As String = "D1"
-Const EXP_FILENAME As String = "RoamRep.pdf"
+Const COUNTRY_REP As String = "A1:B"
+Const EXP_FILENAME As String = "CountryRep.pdf"
+Private Const COUNTRY_LIST As String = "A2:A"
+Private Const COUNTRY_IND As String = "A1"
+
+' ===============================================================
+' RemoveDuplicates
+' Removes duplicates from range
+' ---------------------------------------------------------------
+Sub RemoveDuplicates()
+    Dim DuplicateValues As Range
+    Dim AryCountries() As Variant
+    
+    ClearData
+    
+    AryCountries = ShtLookup.GetCountryList
+    
+    Me.Range(COUNTRY_LIST & UBound(AryCountries)) = AryCountries
+    
+    Set DuplicateValues = Range(COUNTRY_LIST & UBound(AryCountries))
+    
+    DuplicateValues.RemoveDuplicates Columns:=Array(1), Header:=xlYes
+    
+    Set DuplicateValues = Nothing
+End Sub
+
+' ===============================================================
+' ClearData
+'Clears data from sheet
+' ---------------------------------------------------------------
+Public Sub ClearData()
+    Me.Unprotect
+    Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
+    AddHeadings
+    Me.Protect
+End Sub
+
+' ===============================================================
+' AddHeadings
+' Adds column headings
+' ---------------------------------------------------------------
+Public Sub AddHeadings()
+    Range("A1") = "Country"
+    Range("B1") = "Total Cost"
+End Sub
 
 ' ===============================================================
 ' SendToPDF
@@ -33,15 +75,15 @@ Public Sub SendToPDF()
     Dim NoRows As Integer
     Dim RngList As Range
     Dim i As Integer
-   
+    
     For i = 1 To 500
-        If Me.Range(LIST_IND).Offset(i, 0).Value = "" Then
+        If Me.Range(COUNTRY_IND).Offset(i, 0).Value = "" Then
             NoRows = i
             Exit For
         End If
     Next
     
-    Set RngList = Me.Range(LIST_AREA & NoRows)
+    Set RngList = Me.Range(COUNTRY_REP & NoRows)
     
     RngList.ExportAsFixedFormat xlTypePDF, ThisWorkbook.Path & "\" & EXP_FILENAME, xlQualityStandard, True, True, OpenAfterPublish:=False
     
@@ -72,30 +114,5 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub BtnHomeClick()
     ModBtnActions.GoToHome Me.Shapes("BtnHome")
-End Sub
-
-' ===============================================================
-' ClearData
-'Clears data from sheet
-' ---------------------------------------------------------------
-Public Sub ClearData()
-    Me.Unprotect
-    Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
-    AddHeadings
-    Me.Protect
-End Sub
-
-' ===============================================================
-' AddHeadings
-' Adds column headings
-' ---------------------------------------------------------------
-Public Sub AddHeadings()
-    Range("A1") = "Number"
-    Range("B1") = "User Name"
-    Range("C1") = "Network"
-    Range("D1") = "Mins"
-    Range("E1") = "SMS"
-    Range("F1") = "MB"
-    Range("G1") = "Cost"
 End Sub
 
