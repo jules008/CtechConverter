@@ -406,8 +406,6 @@ Public Function GetNumeric(VarText As Variant, Financial As Boolean) As String
     GetNumeric = Result
 
 End Function
-' Force explicit declaration of variables
-Option Explicit
 
 ' ===============================================================
 ' HexadecimalToDecimal

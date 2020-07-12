@@ -22,7 +22,7 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Const RNG_INDEX As String = "A1"
-Private Const NO_COLS As Integer = 12
+Private Const NO_COLS As Integer = 13
 
 ' ===============================================================
 ' FilterList
@@ -33,12 +33,12 @@ Public Sub FilterList(AryItemList() As Variant)
     Dim AryOutput() As Variant
     Dim RowNo As Integer
     
-    ReDim AryOutput(1 To UBound(AryItemList), 1 To NO_COLS)
+    ReDim AryOutput(0 To UBound(AryItemList) - 1, 0 To NO_COLS - 1)
     
     RowNo = 1
     For i = LBound(AryItemList, 1) To UBound(AryItemList, 1)
         
-        If AryItemList(i, enfrom) = "Overseas" Then
+        If AryItemList(i, enfrom + 1) = "Overseas" Then
             For x = LBound(AryItemList, 2) To UBound(AryItemList, 2)
                 AryOutput(RowNo, x) = AryItemList(i, x)
             Next
@@ -46,7 +46,7 @@ Public Sub FilterList(AryItemList() As Variant)
         End If
     Next
     
-'    ReDim Preserve AryOutput(1 To RowNo - 1, 1 To NO_COLS)
+'    ReDim Preserve AryOutput(0 To RowNo - 1, 0 To NO_COLS - 1)
     ClearData
     AddHeadings
     DisplayList AryOutput
@@ -57,8 +57,12 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
+    Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -66,18 +70,20 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Index"
-    Range("B1") = "Time"
-    Range("C1") = "Billed Number"
-    Range("D1") = "Call Category"
-    Range("E1") = "Date"
-    Range("F1") = "Description"
-    Range("G1") = "Duration"
-    Range("H1") = "MB"
-    Range("I1") = "Text"
-    Range("J1") = "Cost"
-    Range("K1") = "From"
-    Range("L1") = "To"
+    Me.Unprotect
+    Range(RNG_INDEX).Offset(0, 0) = "Index"
+    Range(RNG_INDEX).Offset(0, 1) = "Time"
+    Range(RNG_INDEX).Offset(0, 2) = "Billed Number"
+    Range(RNG_INDEX).Offset(0, 3) = "Call Category"
+    Range(RNG_INDEX).Offset(0, 4) = "Date"
+    Range(RNG_INDEX).Offset(0, 5) = "Description"
+    Range(RNG_INDEX).Offset(0, 6) = "Duration"
+    Range(RNG_INDEX).Offset(0, 7) = "MB"
+    Range(RNG_INDEX).Offset(0, 8) = "Text"
+    Range(RNG_INDEX).Offset(0, 9) = "Cost"
+    Range(RNG_INDEX).Offset(0, 10) = "From"
+    Range(RNG_INDEX).Offset(0, 11) = "To"
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -89,21 +95,23 @@ Private Sub DisplayList(AryList() As Variant)
     
     On Error Resume Next
     
+    Me.Unprotect
     For r = LBound(AryList, 1) To UBound(AryList, 1)
         With Range(RNG_INDEX)
-            .Offset(r, 0) = AryList(r, enIndex)
-            .Offset(r, 1) = CSng(AryList(r, enTime))
-            .Offset(r, 2) = AryList(r, enPhoneNo)
-            .Offset(r, 3) = AryList(r, enCategory)
-            .Offset(r, 4) = AryList(r, enItemDate)
-            .Offset(r, 5) = AryList(r, enDescription)
-            .Offset(r, 6) = CSng(AryList(r, enDuration))
-            .Offset(r, 7) = CSng(AryList(r, enMB))
-            .Offset(r, 8) = CSng(AryList(r, enText))
-            .Offset(r, 9) = CSng(AryList(r, enCost))
-            .Offset(r, 10) = AryList(r, enfrom)
-            .Offset(r, 11) = AryList(r, enTo)
+            .Offset(r + 1, 0) = AryList(r, enIndex)
+            .Offset(r + 1, 1) = CSng(AryList(r, enTime))
+            .Offset(r + 1, 2) = AryList(r, enPhoneNo)
+            .Offset(r + 1, 3) = AryList(r, enCategory)
+            .Offset(r + 1, 4) = AryList(r, enItemDate)
+            .Offset(r + 1, 5) = AryList(r, enDescription)
+            .Offset(r + 1, 6) = CSng(AryList(r, enDuration))
+            .Offset(r + 1, 7) = CSng(AryList(r, enMB))
+            .Offset(r + 1, 8) = CSng(AryList(r, enText))
+            .Offset(r + 1, 9) = CSng(AryList(r, enCost))
+            .Offset(r + 1, 10) = AryList(r, enfrom)
+            .Offset(r + 1, 11) = AryList(r, enTo)
         End With
     Next
+    Me.Protect
     
 End Sub

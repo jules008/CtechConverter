@@ -21,10 +21,10 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const COUNTRY_REP As String = "A1:B"
+Const COUNTRY_REP As String = "A2:B"
 Const EXP_FILENAME As String = "CountryRep.pdf"
-Private Const COUNTRY_LIST As String = "A2:A"
-Private Const COUNTRY_IND As String = "A1"
+Private Const COUNTRY_LIST As String = "A3:A"
+Private Const COUNTRY_IND As String = "A2"
 
 ' ===============================================================
 ' RemoveDuplicates
@@ -52,6 +52,8 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
     Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
@@ -63,8 +65,10 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Country"
-    Range("B1") = "Total Cost"
+    Me.Protect
+    Range(COUNTRY_IND).Offset(0, 0) = "Country"
+    Range(COUNTRY_IND).Offset(0, 1) = "Total Cost"
+    Me.Unprotect
 End Sub
 
 ' ===============================================================

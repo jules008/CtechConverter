@@ -21,12 +21,23 @@ Const FILE_NAME As String = "FullReport.pdf"
 ' ---------------------------------------------------------------
 Public Sub CreateReport()
     Dim AcroApp As Acrobat.CAcroApp
+    Dim FSO As FileSystemObject
     Dim PDFFrontPage As Acrobat.CAcroPDDoc
     Dim Part1Document As Acrobat.CAcroPDDoc
     Dim Part2Document As Acrobat.CAcroPDDoc
     Dim Part3Document As Acrobat.CAcroPDDoc
     Dim Part4Document As Acrobat.CAcroPDDoc
     Dim numPages As Integer
+    
+    Set FSO = New FileSystemObject
+    
+    With FSO
+        If .FileExists(ThisWorkbook.Path & "\" & "FullReport.pdf") Then
+            .DeleteFile ThisWorkbook.Path & "\" & "FullReport.pdf"
+        End If
+    End With
+    
+    Set FSO = Nothing
     
     Set AcroApp = CreateObject("AcroExch.App")
     Set PDFFrontPage = CreateObject("AcroExch.PDDoc")

@@ -24,6 +24,7 @@ Public Sub ShowForm(LocFilePath As String)
 End Sub
 
 Private Sub UserForm_Activate()
+    Me.LblBar.Width = 0
     ModMain.MainConvert FilePath
 
 End Sub

@@ -38,6 +38,8 @@ Public Sub MainConvert(PDFPath As String)
     
     Set AcroAVDoc = CreateObject("AcroExch.AVDoc")
     
+    ModLibrary.PerfSettingsOn
+    
     ShtItemList.ClearData
     ShtPhoneList.ClearData
     
@@ -78,6 +80,7 @@ Public Sub MainConvert(PDFPath As String)
 
                         AryItemList = ItemisationExt(PageNum, AcroPDDoc)
                         ShtItemList.LogResult AryItemList
+                        ShtItemList.SendItemList
                         StrText = ""
                     End If
 
@@ -95,6 +98,8 @@ Public Sub MainConvert(PDFPath As String)
     
     ErrorFlag = AcroApp.CloseAllDocs()
     ErrorFlag = AcroApp.Exit()
+    
+    ModLibrary.PerfSettingsOff
     
     Set AcroApp = Nothing
     Set AcroAVDoc = Nothing

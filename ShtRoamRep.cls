@@ -21,8 +21,8 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "D1:J"
-Const LIST_IND As String = "D1"
+Const LIST_AREA As String = "D2:J"
+Const LIST_IND As String = "D2"
 Const EXP_FILENAME As String = "RoamRep.pdf"
 
 ' ===============================================================
@@ -79,6 +79,8 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
     Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
@@ -90,12 +92,14 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Number"
-    Range("B1") = "User Name"
-    Range("C1") = "Network"
-    Range("D1") = "Mins"
-    Range("E1") = "SMS"
-    Range("F1") = "MB"
-    Range("G1") = "Cost"
+    Me.Unprotect
+    Range(LIST_IND).Offset(0, 0) = "Phone Number"
+    Range(LIST_IND).Offset(0, 1) = "User Name"
+    Range(LIST_IND).Offset(0, 2) = "Network"
+    Range(LIST_IND).Offset(0, 3) = "Mins"
+    Range(LIST_IND).Offset(0, 4) = "SMS"
+    Range(LIST_IND).Offset(0, 5) = "MB"
+    Range(LIST_IND).Offset(0, 6) = "Cost"
+    Me.Protect
 End Sub
 

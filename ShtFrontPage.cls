@@ -34,9 +34,9 @@ Public Sub SendToPDF()
     Dim i As Integer
     
     Set RngList = Me.Range(PAGE_AREA)
-
+    Me.Visible = xlSheetVisible
     RngList.ExportAsFixedFormat xlTypePDF, ThisWorkbook.Path & "\" & EXP_FILENAME, xlQualityStandard, True, True, OpenAfterPublish:=False
-    
+    Me.Visible = xlSheetVeryHidden
     Set RngList = Nothing
 End Sub
 
@@ -58,11 +58,4 @@ Public Sub DeletePDF()
     Set FSO = Nothing
 End Sub
 
-' ===============================================================
-' ClearData
-'Clears data from sheet
-' ---------------------------------------------------------------
-Public Sub ClearData()
-    Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
-End Sub
 

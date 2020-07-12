@@ -21,8 +21,8 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "A1:L"
-Const LIST_IND As String = "A1"
+Const LIST_AREA As String = "A2:L"
+Const LIST_IND As String = "A2"
 Const EXP_FILENAME As String = "OutSpendRep.pdf"
 
 ' ===============================================================
@@ -79,6 +79,8 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
     Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
@@ -90,16 +92,18 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Phone No"
-    Range("B1") = "User Name"
-    Range("C1") = "Int Mins"
-    Range("D1") = "Int SMS"
-    Range("E1") = "Int MB"
-    Range("F1") = "In Cost"
-    Range("G1") = "Roaming Mins"
-    Range("H1") = "Roaming SMS"
-    Range("I1") = "Roaming MB"
-    Range("J1") = "Roaming Cost"
-    Range("K1") = "Other Mins"
-    Range("L1") = "Purchases"
+    Me.Unprotect
+    Range(LIST_IND).Offset(0, 0) = "Phone Number"
+    Range(LIST_IND).Offset(0, 1) = "User Name"
+    Range(LIST_IND).Offset(0, 2) = "Int Mins"
+    Range(LIST_IND).Offset(0, 3) = "Int SMS"
+    Range(LIST_IND).Offset(0, 4) = "Int MB"
+    Range(LIST_IND).Offset(0, 5) = "Int Cost"
+    Range(LIST_IND).Offset(0, 6) = "Roaming Mins"
+    Range(LIST_IND).Offset(0, 7) = "Roaming SMS"
+    Range(LIST_IND).Offset(0, 8) = "Roaming MB"
+    Range(LIST_IND).Offset(0, 9) = "Roaming Cost"
+    Range(LIST_IND).Offset(0, 10) = "Other Mins"
+    Range(LIST_IND).Offset(0, 11) = "Purchases"
+    Me.Protect
 End Sub

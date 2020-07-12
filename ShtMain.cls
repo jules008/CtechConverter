@@ -87,3 +87,11 @@ Public Sub BtnPDFRepClick()
     ModPDFReport.CreateReport
 End Sub
 
+' ===============================================================
+' BtnLoadBillClick
+' ---------------------------------------------------------------
+Public Sub BtnLoadBillClick()
+    ActionButtonClick Me.Shapes("BtnLoadBill")
+    ShtMain.SelectFile
+End Sub
+

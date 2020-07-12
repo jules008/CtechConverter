@@ -22,6 +22,7 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Const NO_COLS As Integer = 12
+Private Const LIST_IND As String = "A1"
 
 ' ===============================================================
 ' LogResult
@@ -31,12 +32,14 @@ Public Sub LogResult(AryExtract() As Variant)
     Dim NoRows As Integer
     Dim RngResults As Range
         
+    Me.Unprotect
+    NoRows = Application.WorksheetFunction.CountA(Me.Range(LIST_IND).EntireColumn)
     
-    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
     Set RngResults = Me.Range(Me.Cells(1, 1), Me.Cells(UBound(AryExtract, 1) + 1, UBound(AryExtract, 2) + 1)).Offset(NoRows, 0)
     RngResults = AryExtract
     
     RngResults.EntireColumn.AutoFit
+    Me.Protect
     
     Set RngResults = Nothing
 End Sub
@@ -46,8 +49,12 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
+    Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -55,18 +62,20 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Index"
-    Range("B1") = "Time"
-    Range("C1") = "Billed Number"
-    Range("D1") = "Call Category"
-    Range("E1") = "Date"
-    Range("F1") = "Description"
-    Range("G1") = "Duration"
-    Range("H1") = "MB"
-    Range("I1") = "Text"
-    Range("J1") = "Cost"
-    Range("K1") = "From"
-    Range("L1") = "To"
+    Me.Unprotect
+    Range(LIST_IND).Offset(0, 0) = "Index"
+    Range(LIST_IND).Offset(0, 1) = "Time"
+    Range(LIST_IND).Offset(0, 2) = "Billed Number"
+    Range(LIST_IND).Offset(0, 3) = "Call Category"
+    Range(LIST_IND).Offset(0, 4) = "Date"
+    Range(LIST_IND).Offset(0, 5) = "Description"
+    Range(LIST_IND).Offset(0, 6) = "Duration"
+    Range(LIST_IND).Offset(0, 7) = "MB"
+    Range(LIST_IND).Offset(0, 8) = "Text"
+    Range(LIST_IND).Offset(0, 9) = "Cost"
+    Range(LIST_IND).Offset(0, 10) = "From"
+    Range(LIST_IND).Offset(0, 11) = "To"
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -77,7 +86,7 @@ Public Sub SendItemList()
     Dim NoRows As Integer
     Dim AryList() As Variant
     
-    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
+    NoRows = Application.WorksheetFunction.CountA(Me.Range(LIST_IND).EntireColumn)
     
     ReDim AryList(0 To NoRows - 2, 0 To NO_COLS - 1)
     
