@@ -17,9 +17,13 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 02 Jul 20
+' Date - 03 Jul 20
 '===============================================================
 Option Explicit
+
+Const LIST_AREA As String = "A2:I"
+Const LIST_IND As String = "A2"
+Const EXP_FILENAME As String = "IndSumRep.pdf"
 
 ' ===============================================================
 ' LogResult
@@ -30,8 +34,10 @@ Public Sub LogResult(AryExtract() As Variant)
     Dim RngResults As Range
     Dim i As Integer
     
-    NoRows = Application.WorksheetFunction.CountA(Me.Range("A:A"))
-    Set RngResults = Range("A1").Offset(NoRows, 0)
+    NoRows = Application.WorksheetFunction.CountA(Me.Range(LIST_IND).EntireColumn)
+    Set RngResults = Range(LIST_IND).Offset(NoRows, 0)
+    
+    Me.Unprotect
     
     For i = LBound(AryExtract, 1) To UBound(AryExtract, 1)
         RngResults.Offset(i, enMobNum) = AryExtract(i, enMobNum)
@@ -44,6 +50,8 @@ Public Sub LogResult(AryExtract() As Variant)
     
     RngResults.Columns.AutoFit
     
+    Me.Protect
+    
     Set RngResults = Nothing
 End Sub
 
@@ -52,9 +60,12 @@ End Sub
 'Clears data from sheet
 ' ---------------------------------------------------------------
 Public Sub ClearData()
+    On Error Resume Next
+    
+    Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
-
     AddHeadings
+    Me.Protect
 End Sub
 
 ' ===============================================================
@@ -62,17 +73,65 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Range("A1") = "Phone Number"
-    Range("B1") = "User Name"
-    Range("C1") = "Plan"
-    Range("D1") = "Service Charge"
-    Range("E1") = "Usage"
-    Range("F1") = "Mins"
-    Range("G1") = "No SMS"
-    Range("H1") = "Data(MB)"
-    Range("I1") = "Total Cost"
+    Me.Unprotect
+    Range(LIST_IND).Offset(0, 0) = "Phone Number"
+    Range(LIST_IND).Offset(0, 1) = "User Name"
+    Range(LIST_IND).Offset(0, 2) = "Plan"
+    Range(LIST_IND).Offset(0, 3) = "Service Charge"
+    Range(LIST_IND).Offset(0, 4) = "Usage"
+    Range(LIST_IND).Offset(0, 5) = "Mins"
+    Range(LIST_IND).Offset(0, 6) = "No SMS"
+    Range(LIST_IND).Offset(0, 7) = "Data(MB)"
+    Range(LIST_IND).Offset(0, 8) = "Total Cost"
+    Me.Protect
 End Sub
 
+' ===============================================================
+' SendToPDF
+' Sends list to PDF file
+' ---------------------------------------------------------------
+Public Sub SendToPDF()
+    Dim NoRows As Integer
+    Dim RngList As Range
+    Dim i As Integer
+    
+    For i = 1 To 500
+        If Me.Range(LIST_IND).Offset(i, 0).Value = "" Then
+            NoRows = i
+            Exit For
+        End If
+    Next
+    
+    Set RngList = Me.Range(LIST_AREA & NoRows)
+    
+    RngList.ExportAsFixedFormat xlTypePDF, ThisWorkbook.Path & "\" & EXP_FILENAME, xlQualityStandard, True, True, OpenAfterPublish:=False
+    
+    Set RngList = Nothing
+End Sub
 
+' ===============================================================
+' DeletePDF
+' Deletes the PDF file when it is no longer needed
+' ---------------------------------------------------------------
+Public Sub DeletePDF()
+    Dim FSO As FileSystemObject
+    
+    Set FSO = New FileSystemObject
+    
+    With FSO
+        If .FileExists(ThisWorkbook.Path & "\" & EXP_FILENAME) Then
+            .DeleteFile ThisWorkbook.Path & "\" & EXP_FILENAME
+        End If
+    End With
+    
+    Set FSO = Nothing
+End Sub
 
+' ===============================================================
+' BtnHomeClick
+' Returns to Main screen
+' ---------------------------------------------------------------
+Public Sub BtnHomeClick()
+    ModBtnActions.GoToHome Me.Shapes("BtnHome")
+End Sub
 
