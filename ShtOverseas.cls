@@ -35,12 +35,12 @@ Public Sub FilterList(AryItemList() As Variant)
     
     ReDim AryOutput(0 To UBound(AryItemList) - 1, 0 To NO_COLS - 1)
     
-    RowNo = 1
+    RowNo = 0
     For i = LBound(AryItemList, 1) To UBound(AryItemList, 1)
         
         If AryItemList(i, enfrom + 1) = "Overseas" Then
             For x = LBound(AryItemList, 2) To UBound(AryItemList, 2)
-                AryOutput(RowNo, x) = AryItemList(i, x)
+                AryOutput(RowNo, x - 1) = AryItemList(i, x)
             Next
             RowNo = RowNo + 1
         End If

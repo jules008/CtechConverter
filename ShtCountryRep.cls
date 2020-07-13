@@ -27,22 +27,25 @@ Private Const COUNTRY_LIST As String = "A3:A"
 Private Const COUNTRY_IND As String = "A2"
 
 ' ===============================================================
-' RemoveDuplicates
-' Removes duplicates from range
+' GetCountryList
+' gets country list and removes duplicates
 ' ---------------------------------------------------------------
-Sub RemoveDuplicates()
+Sub GetCountryList()
     Dim DuplicateValues As Range
     Dim AryCountries() As Variant
     
     ClearData
+    Me.Unprotect
     
     AryCountries = ShtLookup.GetCountryList
+    Me.Range(COUNTRY_LIST & UBound(AryCountries) + 2) = AryCountries
     
-    Me.Range(COUNTRY_LIST & UBound(AryCountries)) = AryCountries
-    
-    Set DuplicateValues = Range(COUNTRY_LIST & UBound(AryCountries))
+    Set DuplicateValues = Range(COUNTRY_LIST & UBound(AryCountries) + 2)
     
     DuplicateValues.RemoveDuplicates Columns:=Array(1), Header:=xlYes
+    
+    Me.Range(COUNTRY_REP & "2").EntireColumn.AutoFit
+    Me.Protect
     
     Set DuplicateValues = Nothing
 End Sub
@@ -65,10 +68,10 @@ End Sub
 ' Adds column headings
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
-    Me.Protect
+    Me.Unprotect
     Range(COUNTRY_IND).Offset(0, 0) = "Country"
     Range(COUNTRY_IND).Offset(0, 1) = "Total Cost"
-    Me.Unprotect
+    Me.Protect
 End Sub
 
 ' ===============================================================

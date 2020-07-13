@@ -81,6 +81,7 @@ Public Sub MainConvert(PDFPath As String)
                         AryItemList = ItemisationExt(PageNum, AcroPDDoc)
                         ShtItemList.LogResult AryItemList
                         ShtItemList.SendItemList
+                        ShtCountryRep.GetCountryList
                         StrText = ""
                     End If
 
