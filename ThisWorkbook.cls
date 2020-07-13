@@ -55,12 +55,7 @@ Private Sub LockWorkbook()
         [PhoneNo] = 0
         [Index] = 0
     End With
-    
-    With ShtRoamRep
-        .Unprotect
-        .Columns("A:C").Hidden = True
-    End With
-    
+        
     ShtItemList.Visible = xlSheetVeryHidden
     ShtLookup.Visible = xlSheetHidden
     ShtOverseas.Visible = xlSheetVeryHidden
@@ -96,12 +91,7 @@ Private Sub UnLockWorkbook()
         .Unprotect
         .Columns("L:M").Hidden = False
     End With
-    
-    With ShtRoamRep
-        .Unprotect
-        .Columns("A:C").Hidden = False
-    End With
-    
+        
     ShtItemList.Visible = xlSheetVisible
     ShtLookup.Visible = xlSheetVisible
     ShtOverseas.Visible = xlSheetVisible

@@ -82,6 +82,7 @@ Public Sub MainConvert(PDFPath As String)
                         ShtItemList.LogResult AryItemList
                         ShtItemList.SendItemList
                         ShtCountryRep.GetCountryList
+                        ShtRoamRep.RefreshPivot
                         StrText = ""
                     End If
 

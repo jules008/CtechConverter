@@ -24,6 +24,7 @@ Option Explicit
 Const LIST_AREA As String = "D2:J"
 Const LIST_IND As String = "D2"
 Const EXP_FILENAME As String = "RoamRep.pdf"
+Const PIVOT_TBL As String = "A5"
 
 ' ===============================================================
 ' SendToPDF
@@ -94,12 +95,19 @@ End Sub
 Public Sub AddHeadings()
     Me.Unprotect
     Range(LIST_IND).Offset(0, 0) = "Phone Number"
-    Range(LIST_IND).Offset(0, 1) = "User Name"
-    Range(LIST_IND).Offset(0, 2) = "Network"
-    Range(LIST_IND).Offset(0, 3) = "Mins"
-    Range(LIST_IND).Offset(0, 4) = "SMS"
-    Range(LIST_IND).Offset(0, 5) = "MB"
-    Range(LIST_IND).Offset(0, 6) = "Cost"
+    Range(LIST_IND).Offset(0, 1) = "Network"
+    Range(LIST_IND).Offset(0, 2) = "Mins"
+    Range(LIST_IND).Offset(0, 3) = "SMS"
+    Range(LIST_IND).Offset(0, 4) = "MB"
+    Range(LIST_IND).Offset(0, 5) = "Cost"
     Me.Protect
+End Sub
+
+' ===============================================================
+' RefreshPivot
+' rfreshes the pivot table data
+' ---------------------------------------------------------------
+Public Sub RefreshPivot()
+    Me.Range(PIVOT_TBL).PivotTable.RefreshTable
 End Sub
 
