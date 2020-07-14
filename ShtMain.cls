@@ -95,3 +95,12 @@ Public Sub BtnLoadBillClick()
     ShtMain.SelectFile
 End Sub
 
+' ===============================================================
+' BtnGraphsClick
+' ---------------------------------------------------------------
+Public Sub BtnGraphsClick()
+    ActionButtonClick Me.Shapes("BtnGraphs")
+    ShtGraphs.Activate
+End Sub
+
+

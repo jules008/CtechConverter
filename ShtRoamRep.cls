@@ -133,6 +133,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub RefreshPivot()
     Me.Unprotect
+    Me.Range(PIVOT_TBL).PivotTable.PivotFields("From").CurrentPage = "Overseas"
     Me.Range(PIVOT_TBL).PivotTable.RefreshTable
     Me.Protect
 End Sub
