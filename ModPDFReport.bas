@@ -31,6 +31,8 @@ Public Sub CreateReport()
     
     Set FSO = New FileSystemObject
     
+    ModLibrary.PerfSettingsOn
+    
     With FSO
         If .FileExists(ThisWorkbook.Path & "\" & "FullReport.pdf") Then
             .DeleteFile ThisWorkbook.Path & "\" & "FullReport.pdf"
@@ -95,6 +97,8 @@ Public Sub CreateReport()
     ShtOutSpendRep.DeletePDF
     ShtRoamRep.DeletePDF
     ShtPhoneList.DeletePDF
+    
+    ModLibrary.PerfSettingsOff
     
     Set Part1Document = Nothing
     Set Part2Document = Nothing
