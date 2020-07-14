@@ -48,9 +48,11 @@ End Sub
 ' LockWorkbook
 ' Locks Workbook
 ' ---------------------------------------------------------------
-Private Sub LockWorkbook()
+Public Sub LockWorkbook()
     Dim View As WorksheetView
     Dim WSheet As Worksheet
+    
+    SetNarrowMargins
     
     With ShtMain
         .Unprotect
@@ -81,6 +83,7 @@ Private Sub LockWorkbook()
     With Application
         .DisplayFormulaBar = False
     End With
+    
 End Sub
 
 ' ===============================================================
@@ -120,3 +123,27 @@ Private Sub UnLockWorkbook()
     
 End Sub
 
+
+' ===============================================================
+' SetNarrowMargins
+' Sets all margins to narrow
+' ---------------------------------------------------------------
+Public Sub SetNarrowMargins()
+  Dim Wksheet As Worksheet
+  
+  Application.PrintCommunication = False
+  
+  For Each Wksheet In ThisWorkbook.Worksheets
+    With Wksheet.PageSetup
+      .LeftMargin = Application.InchesToPoints(0.25)
+      .RightMargin = Application.InchesToPoints(0.25)
+      .TopMargin = Application.InchesToPoints(0.75)
+      .BottomMargin = Application.InchesToPoints(0.75)
+      .HeaderMargin = Application.InchesToPoints(0.3)
+      .FooterMargin = Application.InchesToPoints(0.3)
+    End With
+  Next Wksheet
+  
+  Set Wksheet = Nothing
+End Sub
+ 

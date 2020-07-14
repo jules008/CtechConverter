@@ -84,6 +84,7 @@ Public Sub MainConvert(PDFPath As String)
                         ShtCountryRep.GetCountryList
                         ShtRoamRep.RefreshPivot
                         StrText = ""
+                        ThisWorkbook.LockWorkbook
                     End If
 
                Next TCount

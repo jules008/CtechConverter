@@ -21,7 +21,7 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const PAGE_AREA As String = "A1:K56"
+Const PAGE_AREA As String = "A1:J49"
 Const EXP_FILENAME As String = "FrontPage.pdf"
 
 ' ===============================================================

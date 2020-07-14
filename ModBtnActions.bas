@@ -85,7 +85,7 @@ Private Sub FormatButton(Btn As Shape, OnState As Boolean)
             With .Line
                 If Btn.Name = "BtnLoadBill" Then
                     .ForeColor.RGB = COLOUR_6
-                    .Weight = 0.75
+                    .Weight = 1.5
                 Else
                     .ForeColor.RGB = COLOUR_2
                     .Weight = 0.75
