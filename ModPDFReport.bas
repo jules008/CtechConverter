@@ -27,6 +27,7 @@ Public Sub CreateReport()
     Dim Part2Document As Acrobat.CAcroPDDoc
     Dim Part3Document As Acrobat.CAcroPDDoc
     Dim Part4Document As Acrobat.CAcroPDDoc
+    Dim Part5Document As Acrobat.CAcroPDDoc
     Dim numPages As Integer
     
     Set FSO = New FileSystemObject
@@ -47,38 +48,54 @@ Public Sub CreateReport()
     Set Part2Document = CreateObject("AcroExch.PDDoc")
     Set Part3Document = CreateObject("AcroExch.PDDoc")
     Set Part4Document = CreateObject("AcroExch.PDDoc")
+    Set Part5Document = CreateObject("AcroExch.PDDoc")
     
     ShtFrontPage.SendToPDF
+    ShtGraphs.SendToPDF
     ShtCountryRep.SendToPDF
     ShtOutSpendRep.SendToPDF
     ShtRoamRep.SendToPDF
     ShtPhoneList.SendToPDF
     
-    numPages = Part1Document.GetNumPages()
-    
     PDFFrontPage.Open (ThisWorkbook.Path & "\" & "FrontPage.pdf")
-    Part1Document.Open (ThisWorkbook.Path & "\" & "IndSumRep.pdf")
-    Part2Document.Open (ThisWorkbook.Path & "\" & "OutSpendRep.pdf")
-    Part3Document.Open (ThisWorkbook.Path & "\" & "RoamRep.pdf")
-    Part4Document.Open (ThisWorkbook.Path & "\" & "CountryRep.pdf")
+    Part1Document.Open (ThisWorkbook.Path & "\" & "Graphs.pdf")
+    Part2Document.Open (ThisWorkbook.Path & "\" & "IndSumRep.pdf")
+    Part3Document.Open (ThisWorkbook.Path & "\" & "OutSpendRep.pdf")
+    Part4Document.Open (ThisWorkbook.Path & "\" & "RoamRep.pdf")
+    Part5Document.Open (ThisWorkbook.Path & "\" & "CountryRep.pdf")
 
+    numPages = PDFFrontPage.GetNumPages()
+    
     If PDFFrontPage.InsertPages(numPages - 1, Part1Document, _
+        0, Part1Document.GetNumPages(), True) = False Then
+        Err.Raise 2500, Description:="Merge - Cannot insert pages"
+    End If
+    
+    numPages = PDFFrontPage.GetNumPages()
+
+    If PDFFrontPage.InsertPages(numPages - 1, Part2Document, _
         0, Part2Document.GetNumPages(), True) = False Then
         Err.Raise 2500, Description:="Merge - Cannot insert pages"
     End If
-
-    If PDFFrontPage.InsertPages(numPages - 1, Part2Document, _
-        0, Part3Document.GetNumPages(), True) = False Then
-        Err.Raise 2500, Description:="Merge - Cannot insert pages"
-    End If
+        
+    numPages = PDFFrontPage.GetNumPages()
     
     If PDFFrontPage.InsertPages(numPages - 1, Part3Document, _
         0, Part3Document.GetNumPages(), True) = False Then
         Err.Raise 2500, Description:="Merge - Cannot insert pages"
     End If
- 
+    
+    numPages = PDFFrontPage.GetNumPages()
+    
     If PDFFrontPage.InsertPages(numPages - 1, Part4Document, _
         0, Part4Document.GetNumPages(), True) = False Then
+        Err.Raise 2500, Description:="Merge - Cannot insert pages"
+    End If
+     
+    numPages = PDFFrontPage.GetNumPages()
+
+    If PDFFrontPage.InsertPages(numPages - 1, Part5Document, _
+        0, Part5Document.GetNumPages(), True) = False Then
         Err.Raise 2500, Description:="Merge - Cannot insert pages"
     End If
     
@@ -91,8 +108,10 @@ Public Sub CreateReport()
     Part2Document.Close
     Part3Document.Close
     Part4Document.Close
+    Part5Document.Close
     
     ShtFrontPage.DeletePDF
+    ShtGraphs.DeletePDF
     ShtCountryRep.DeletePDF
     ShtOutSpendRep.DeletePDF
     ShtRoamRep.DeletePDF
@@ -104,6 +123,7 @@ Public Sub CreateReport()
     Set Part2Document = Nothing
     Set Part3Document = Nothing
     Set Part4Document = Nothing
+    Set Part5Document = Nothing
 End Sub
 
 ' ===============================================================
