@@ -28,6 +28,9 @@ Option Explicit
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     UnLockWorkbook
     ModLibrary.PerfSettingsOff
+    Application.DisplayAlerts = False
+    ShtClose.Visible = xlSheetVisible
+    ShtClose.Activate
 End Sub
 
 ' ===============================================================
@@ -35,6 +38,7 @@ End Sub
 ' Logs the results of the comparison
 ' ---------------------------------------------------------------
 Private Sub Workbook_Open()
+    ShtClose.Visible = xlSheetVeryHidden
     ShtMain.Activate
     ModPDFReport.ClearReports
     LockWorkbook
@@ -116,5 +120,3 @@ Private Sub UnLockWorkbook()
     
 End Sub
 
-Private Sub TurnOffGridLines(target As Worksheet)
-End Sub

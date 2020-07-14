@@ -96,8 +96,6 @@ Public Sub MainConvert(PDFPath As String)
     Application.Wait (Now + TimeValue("0:00:2"))
     Unload FrmProgress
     
-    MsgBox "Extraction Complete"
-    
     ErrorFlag = AcroApp.CloseAllDocs()
     ErrorFlag = AcroApp.Exit()
     
