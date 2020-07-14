@@ -21,9 +21,12 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "A2:I"
+Const LIST_AREA As String = "A1:I"
 Const LIST_IND As String = "A2"
 Const EXP_FILENAME As String = "IndSumRep.pdf"
+Const TITLE As String = "Individual Summary Report"
+Const RNG_TITLE As String = "A1"
+Const COL_WIDTHS As String = "12,18,18,7,7,7,5,7,7"
 
 ' ===============================================================
 ' LogResult
@@ -40,15 +43,13 @@ Public Sub LogResult(AryExtract() As Variant)
     Me.Unprotect
     
     For i = LBound(AryExtract, 1) To UBound(AryExtract, 1)
-        RngResults.Offset(i, enMobNum) = AryExtract(i, enMobNum)
-        RngResults.Offset(i, enName) = AryExtract(i, enName)
-        RngResults.Offset(i, enPlan) = AryExtract(i, enPlan)
-        RngResults.Offset(i, enServCh) = CSng(AryExtract(i, enServCh))
-        RngResults.Offset(i, enUsage) = CSng(AryExtract(i, enUsage))
-        RngResults.Offset(i, enTotal) = CSng(AryExtract(i, enTotal))
+        RngResults.Offset(i - 1, enMobNum) = AryExtract(i, enMobNum)
+        RngResults.Offset(i - 1, enName) = AryExtract(i, enName)
+        RngResults.Offset(i - 1, enPlan) = AryExtract(i, enPlan)
+        RngResults.Offset(i - 1, enServCh) = CSng(AryExtract(i, enServCh))
+        RngResults.Offset(i - 1, enUsage) = CSng(AryExtract(i, enUsage))
+        RngResults.Offset(i - 1, enTotal) = CSng(AryExtract(i, enTotal))
     Next
-    
-    RngResults.Columns.AutoFit
     
     Me.Protect
     
@@ -74,15 +75,37 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
     Me.Unprotect
+    Range(RNG_TITLE) = TITLE
     Range(LIST_IND).Offset(0, 0) = "Phone Number"
     Range(LIST_IND).Offset(0, 1) = "User Name"
     Range(LIST_IND).Offset(0, 2) = "Plan"
     Range(LIST_IND).Offset(0, 3) = "Service Charge"
     Range(LIST_IND).Offset(0, 4) = "Usage"
     Range(LIST_IND).Offset(0, 5) = "Mins"
-    Range(LIST_IND).Offset(0, 6) = "No SMS"
-    Range(LIST_IND).Offset(0, 7) = "Data(MB)"
+    Range(LIST_IND).Offset(0, 6) = "SMS"
+    Range(LIST_IND).Offset(0, 7) = "MB"
     Range(LIST_IND).Offset(0, 8) = "Total Cost"
+    SetCols
+    Me.Protect
+End Sub
+
+' ===============================================================
+' SetCols
+' Sets the column widths
+' ---------------------------------------------------------------
+Public Sub SetCols()
+    Dim Widths() As String
+    Dim i As Integer
+    
+    Widths = Split(COL_WIDTHS, ",")
+    
+    Me.Unprotect
+    
+    For i = LBound(Widths) To UBound(Widths)
+        Range(LIST_IND).Offset(0, i).ColumnWidth = CInt(Widths(i))
+    Next
+        
+        
     Me.Protect
 End Sub
 
@@ -107,6 +130,9 @@ Public Sub SendToPDF()
     RngList.ExportAsFixedFormat xlTypePDF, ThisWorkbook.Path & "\" & EXP_FILENAME, xlQualityStandard, True, True, OpenAfterPublish:=False
     
     Set RngList = Nothing
+    
+    ThisWorkbook.LockWorkbook
+    
 End Sub
 
 ' ===============================================================

@@ -21,10 +21,13 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "D2:J"
-Const LIST_IND As String = "D2"
+Const LIST_AREA As String = "A1:F"
+Const LIST_IND As String = "A2"
 Const EXP_FILENAME As String = "RoamRep.pdf"
 Const PIVOT_TBL As String = "A5"
+Const TITLE As String = "Roaming Summary Report"
+Const RNG_TITLE As String = "A1"
+Const COL_WIDTHS As String = "17,20,10,10,10,10"
 
 ' ===============================================================
 ' SendToPDF
@@ -35,7 +38,7 @@ Public Sub SendToPDF()
     Dim RngList As Range
     Dim i As Integer
    
-    For i = 1 To 500
+    For i = 4 To 500
         If Me.Range(LIST_IND).Offset(i, 0).Value = "" Then
             NoRows = i
             Exit For
@@ -94,12 +97,33 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
     Me.Unprotect
+    Range(RNG_TITLE) = TITLE
     Range(LIST_IND).Offset(0, 0) = "Phone Number"
     Range(LIST_IND).Offset(0, 1) = "Network"
     Range(LIST_IND).Offset(0, 2) = "Mins"
     Range(LIST_IND).Offset(0, 3) = "SMS"
     Range(LIST_IND).Offset(0, 4) = "MB"
     Range(LIST_IND).Offset(0, 5) = "Cost"
+    SetCols
+    Me.Protect
+End Sub
+
+' ===============================================================
+' SetCols
+' Sets the column widths
+' ---------------------------------------------------------------
+Public Sub SetCols()
+    Dim Widths() As String
+    Dim i As Integer
+    
+    Widths = Split(COL_WIDTHS, ",")
+    
+    Me.Unprotect
+    
+    For i = LBound(Widths) To UBound(Widths)
+        Range(LIST_IND).Offset(0, i).ColumnWidth = CInt(Widths(i))
+    Next
+        
     Me.Protect
 End Sub
 
@@ -108,6 +132,8 @@ End Sub
 ' rfreshes the pivot table data
 ' ---------------------------------------------------------------
 Public Sub RefreshPivot()
+    Me.Unprotect
     Me.Range(PIVOT_TBL).PivotTable.RefreshTable
+    Me.Protect
 End Sub
 

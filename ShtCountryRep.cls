@@ -21,10 +21,13 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const COUNTRY_REP As String = "A2:B"
+Const COUNTRY_REP As String = "A1:B"
 Const EXP_FILENAME As String = "CountryRep.pdf"
 Private Const COUNTRY_LIST As String = "A3:A"
-Private Const COUNTRY_IND As String = "A2"
+Private Const LIST_IND As String = "A2"
+Const TITLE As String = "Country Report"
+Const RNG_TITLE As String = "A1"
+Const COL_WIDTHS As String = "50,10"
 
 ' ===============================================================
 ' GetCountryList
@@ -44,7 +47,6 @@ Sub GetCountryList()
     
     DuplicateValues.RemoveDuplicates Columns:=Array(1), Header:=xlYes
     
-    Me.Range(COUNTRY_REP & "2").EntireColumn.AutoFit
     Me.Protect
     
     Set DuplicateValues = Nothing
@@ -60,6 +62,7 @@ Public Sub ClearData()
     Me.Unprotect
     Me.UsedRange.SpecialCells(xlCellTypeConstants).ClearContents
     AddHeadings
+    SetCols
     Me.Protect
 End Sub
 
@@ -69,8 +72,29 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
     Me.Unprotect
-    Range(COUNTRY_IND).Offset(0, 0) = "Country"
-    Range(COUNTRY_IND).Offset(0, 1) = "Total Cost"
+    Range(RNG_TITLE) = TITLE
+    Range(LIST_IND).Offset(0, 0) = "Country"
+    Range(LIST_IND).Offset(0, 1) = "Total Cost"
+    Me.Protect
+End Sub
+
+' ===============================================================
+' SetCols
+' Sets the column widths
+' ---------------------------------------------------------------
+Public Sub SetCols()
+    Dim Widths() As String
+    Dim i As Integer
+    
+    Widths = Split(COL_WIDTHS, ",")
+    
+    Me.Unprotect
+    
+    For i = LBound(Widths) To UBound(Widths)
+        Range(LIST_IND).Offset(0, i).ColumnWidth = CInt(Widths(i))
+    Next
+        
+        
     Me.Protect
 End Sub
 
@@ -84,7 +108,7 @@ Public Sub SendToPDF()
     Dim i As Integer
     
     For i = 1 To 500
-        If Me.Range(COUNTRY_IND).Offset(i, 0).Value = "" Then
+        If Me.Range(LIST_IND).Offset(i, 0).Value = "" Then
             NoRows = i
             Exit For
         End If

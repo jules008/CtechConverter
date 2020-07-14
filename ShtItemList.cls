@@ -38,7 +38,6 @@ Public Sub LogResult(AryExtract() As Variant)
     Set RngResults = Me.Range(Me.Cells(1, 1), Me.Cells(UBound(AryExtract, 1) + 1, UBound(AryExtract, 2) + 1)).Offset(NoRows, 0)
     RngResults = AryExtract
     
-    RngResults.EntireColumn.AutoFit
     Me.Protect
     
     Set RngResults = Nothing

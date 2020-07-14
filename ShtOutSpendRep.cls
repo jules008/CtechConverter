@@ -21,9 +21,12 @@ Attribute VB_Exposed = True
 '===============================================================
 Option Explicit
 
-Const LIST_AREA As String = "A2:L"
+Const LIST_AREA As String = "A1:L"
 Const LIST_IND As String = "A2"
 Const EXP_FILENAME As String = "OutSpendRep.pdf"
+Const TITLE As String = "Outside Spend Report"
+Const RNG_TITLE As String = "A1"
+Const COL_WIDTHS As String = "11,14,7,5,5,7,7,5,7,7,7,7"
 
 ' ===============================================================
 ' SendToPDF
@@ -93,6 +96,7 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub AddHeadings()
     Me.Unprotect
+    Range(RNG_TITLE) = TITLE
     Range(LIST_IND).Offset(0, 0) = "Phone Number"
     Range(LIST_IND).Offset(0, 1) = "User Name"
     Range(LIST_IND).Offset(0, 2) = "Int Mins"
@@ -105,5 +109,27 @@ Public Sub AddHeadings()
     Range(LIST_IND).Offset(0, 9) = "Roaming Cost"
     Range(LIST_IND).Offset(0, 10) = "Other Mins"
     Range(LIST_IND).Offset(0, 11) = "Purchases"
+    SetCols
     Me.Protect
 End Sub
+
+' ===============================================================
+' SetCols
+' Sets the column widths
+' ---------------------------------------------------------------
+Public Sub SetCols()
+    Dim Widths() As String
+    Dim i As Integer
+    
+    Widths = Split(COL_WIDTHS, ",")
+    
+    Me.Unprotect
+    
+    For i = LBound(Widths) To UBound(Widths)
+        Range(LIST_IND).Offset(0, i).ColumnWidth = CInt(Widths(i))
+    Next
+        
+        
+    Me.Protect
+End Sub
+
