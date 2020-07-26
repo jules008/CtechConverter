@@ -133,8 +133,10 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub RefreshPivot()
     Me.Unprotect
+    ShtOverseas.Visible = xlSheetHidden
     Me.Range(PIVOT_TBL).PivotTable.PivotFields("From").CurrentPage = "Overseas"
     Me.Range(PIVOT_TBL).PivotTable.RefreshTable
+    ShtOverseas.Visible = xlSheetVeryHidden
     Me.Protect
 End Sub
 
