@@ -82,7 +82,6 @@ Public Sub MainConvert(PDFPath As String)
                         ShtItemList.LogResult AryItemList
                         ShtItemList.SendItemList
                         ShtCountryRep.GetCountryList
-                        ShtRoamRep.RefreshPivot
                         StrText = ""
                         ThisWorkbook.LockWorkbook
                     End If
@@ -91,7 +90,9 @@ Public Sub MainConvert(PDFPath As String)
             End If
             
         Next PageNum
-             
+        
+        ShtRoamRep.RefreshPivot
+        
     End If
     
     Application.Wait (Now + TimeValue("0:00:2"))

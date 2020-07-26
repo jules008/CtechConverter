@@ -133,7 +133,7 @@ End Sub
 Public Sub ClearReports()
     ShtCountryRep.ClearData
     ShtOutSpendRep.ClearData
-    ShtRoamRep.ClearData
+'    ShtRoamRep.ClearData
     ShtPhoneList.ClearData
     ShtItemList.ClearData
     ShtOverseas.ClearData
